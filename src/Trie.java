@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.security.KeyStore.Builder;
 import java.util.*;
 
@@ -26,10 +29,18 @@ public class Trie {
 				for (char c : n.children.keySet()) {
 					int d = parentActiveNodes.get(n);
 					if (c != fromParent) d++;
-					if(d<= depth) activeNodes.put(n.children.get(c), d);
+					if(d<= depth && h(maxHist,n.children.get(c).minHist,depth-d)) activeNodes.put(n.children.get(c), d);
+//					if(d<= depth ) activeNodes.put(n.children.get(c), d);
 				}
 			}
 			
+		}
+		private boolean h(int[] maxHist2, int[] minHist2, int x) {
+			int sum = 0;
+			for (int i = 0; i < minHist2.length; i++) {
+				sum += Math.max(0, minHist2[i]-maxHist2[i]);
+			}
+			return sum<=x;
 		}
 		@Override
 		public int hashCode() {
@@ -127,27 +138,36 @@ public class Trie {
 			printMaxHist(node.children.get(ch));
 		}
 	}
-	public static void printActiveNodes(TrieNode node){
-		System.out.println(node.fromParent+" => "+node.activeNodes.toString());
+	public static int printActiveNodes(TrieNode node){
+		int ret = 0;
+//		System.out.println(node.fromParent+" => "+node.activeNodes.toString());
+		ret += node.activeNodes.size();
 		for (Character ch : node.children.keySet()) {
-			printActiveNodes(node.children.get(ch));
+			ret += printActiveNodes(node.children.get(ch));
 		}
+		return ret;
 	}
 	// Usage example
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		TrieNode root = new TrieNode(null,'\0');
-		insertString(root, "hello");
-		insertString(root, "world");
-		insertString(root, "hi");
+		BufferedReader in = new BufferedReader(new FileReader("mm.txt"));
+		while(true){
+			String line = in.readLine();
+			if(line == null || line.equals("")) break;
+			insertString(root, line);
+		}
+//		insertString(root, "hello");
+//		insertString(root, "world");
+//		insertString(root, "hi");
 		root.minHist();
 		root.maxHist();
 		buildActiveNodes(root, 2);
-		printID(root);
+//		printID(root);
 		System.out.println("============================");
-		printMinHist(root);
+//		printMinHist(root);
 		System.out.println("============================");
-		printMaxHist(root);
+//		printMaxHist(root);
 		System.out.println("============================");
-		printActiveNodes(root);
+		System.out.println(printActiveNodes(root));
 	}
 }
