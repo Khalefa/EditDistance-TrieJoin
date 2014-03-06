@@ -20,17 +20,19 @@ public class Trie {
 			this.id = counter;
 			counter++;
 			parent = p;
-			fromParent = x;
+			fromParent = x;//holding current node character
 		}
 		void buildActiveNodes(int depth){
 			Map<TrieNode,Integer> parentActiveNodes = parent.activeNodes;
 			
 			for (TrieNode n : parentActiveNodes.keySet()) {
+				if(n.id==parent.id && depth>=1) activeNodes.put(n, parentActiveNodes.get(n)+1);//checking for the parent
 				for (char c : n.children.keySet()) {
 					int d = parentActiveNodes.get(n);
-					if (c != fromParent) d++;
-					if(d<= depth && h(maxHist,n.children.get(c).minHist,depth-d)) activeNodes.put(n.children.get(c), d);
-//					if(d<= depth ) activeNodes.put(n.children.get(c), d);
+					//if(n.children.get(c).parent.fromParent!=fromParent && c!=fromParent)d++;
+					if ( c != fromParent && n.children.get(c).parent.id!=this.id) d++;
+					//if(d<= depth && h(maxHist,n.children.get(c).minHist,depth-d)) activeNodes.put(n.children.get(c), d);
+					if(d<= depth ) activeNodes.put(n.children.get(c), d);
 				}
 			}
 			
@@ -140,7 +142,7 @@ public class Trie {
 	}
 	public static int printActiveNodes(TrieNode node){
 		int ret = 0;
-//		System.out.println(node.fromParent+" => "+node.activeNodes.toString());
+		System.out.println(node.fromParent+" => "+node.activeNodes.toString());
 		ret += node.activeNodes.size();
 		for (Character ch : node.children.keySet()) {
 			ret += printActiveNodes(node.children.get(ch));
@@ -150,7 +152,7 @@ public class Trie {
 	// Usage example
 	public static void main(String[] args) throws Exception {
 		TrieNode root = new TrieNode(null,'\0');
-		BufferedReader in = new BufferedReader(new FileReader("mm.txt"));
+		BufferedReader in = new BufferedReader(new FileReader("test.txt"));
 		while(true){
 			String line = in.readLine();
 			if(line == null || line.equals("")) break;
@@ -169,5 +171,7 @@ public class Trie {
 //		printMaxHist(root);
 		System.out.println("============================");
 		System.out.println(printActiveNodes(root));
+		System.out.println("============================");
+		System.out.println(root.children.toString());
 	}
 }
