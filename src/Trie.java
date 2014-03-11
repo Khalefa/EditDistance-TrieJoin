@@ -207,9 +207,6 @@ public class Trie {
 			// insertString(root, line); for trie traversals
 			insertString(root, line, 1);// for dynamic tries
 		}
-		// insertString(root, "hello");
-		// insertString(root, "world");
-		// insertString(root, "hi");
 		// root.minHist();
 		// root.maxHist();
 		// buildActiveNodes(root, 1);
