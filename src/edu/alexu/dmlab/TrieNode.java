@@ -1,18 +1,37 @@
 package edu.alexu.dmlab;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
- class TrieNode {
+
+class TrieNode {
+
+	public TrieNode(TrieNode p, char x) {
+	//	super(p, x);
+		initalize(p, x);
+	}
 	static int counter = 0;
 	int id;
-	Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
+	Map<Character, TrieNode> children= new TreeMap<Character, TrieNode>();
 	boolean leaf;
 	TrieNode parent;
 	char character;
-	Map<TrieNode, Integer> activeNodes = new HashMap<TrieNode, Integer>();
+	Map<TrieNode, Integer> activeNodes=null;// = new HashMap<TrieNode, Integer>();
+
+	public void initalize(TrieNode p, char x) {
+		this.id = counter;
+		counter++;
+		parent = p;
+		character = x;
+	}
+
+	
 	private int min(int i, Object v) {
 		if (v == null)
 			return i;
@@ -20,13 +39,6 @@ import java.util.TreeMap;
 		if (vv > i)
 			return i;
 		return vv;
-	}
-
-	public TrieNode(TrieNode p, char x) {
-		this.id = counter;
-		counter++;
-		parent = p;
-		character = x;
 	}
 
 	public Map<TrieNode, Integer> getDescendant(
@@ -64,7 +76,6 @@ import java.util.TreeMap;
 		return descendents;
 	}
 
-	
 	public HashMap<TrieNode, Integer> getDescendant(int depth, int k) {
 		HashMap<TrieNode, Integer> descendents = new HashMap<TrieNode, Integer>();
 		getDescendant(descendents, depth, k);
@@ -85,14 +96,13 @@ import java.util.TreeMap;
 				int d = parentActiveNodes.get(n);
 				// if(n.children.get(c).parent.fromParent!=fromParent &&
 				// c!=fromParent)d++;
-				if (c != character
-						&& n.children.get(c).parent.id != this.id)
+				if (c != character && n.children.get(c).parent.id != this.id)
 					d++;
 				// if(d<= depth &&
 				// h(maxHist,n.children.get(c).minHist,depth-d))
 				// activeNodes.put(n.children.get(c), d);
 				if (d <= depth)
-					activeNodes.put(n.children.get(c), d);
+					activeNodes.put((TrieNode) n.children.get(c), d);
 			}
 		}
 
@@ -142,13 +152,14 @@ import java.util.TreeMap;
 		activeNodes.put(this, 0);
 		getDescendant(activeNodes, depth, 0);
 
-		System.out.println("Active node " + id + ":" + Text() + ":"
-				+ activeNodes);
+		// System.out.println("Active node " + id + ":" + Text() + ":"
+		// + activeNodes);
 	}
 
-	public void BuildActiveNodes(int depth){
+	public void BuildActiveNodes(int depth) {
 		mybuildActiveNodes(depth);
 	}
+
 	public String Text() {
 		String s = "";
 		if (parent != null)
@@ -165,5 +176,15 @@ import java.util.TreeMap;
 	@Override
 	public int hashCode() {
 		return id;
+	}
+	public HashSet<String> getMatched(){
+		if(!leaf)return null;
+		HashSet<String> l=new HashSet<String>();
+		for(TrieNode n:activeNodes.keySet()){
+			if(n==this)continue;
+			if(n.leaf)
+				l.add(Text()+"-"+n.Text());
+		}
+		return l;
 	}
 }

@@ -11,8 +11,9 @@ public class TrieDynamic extends Trie {
 	public TrieDynamic() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public static void insertString(TrieNode root, String s, int depth) {
-root.getDescendant( root.activeNodes,  depth,0);
+		root.getDescendant(root.activeNodes, depth, 0);
 		TrieNode v = root;
 		Map<TrieNode, Integer> activeNodes = v.activeNodes;
 		TrieNode next = v;
@@ -30,6 +31,7 @@ root.getDescendant( root.activeNodes,  depth,0);
 			n.activeNodes.put(v, v.activeNodes.get(n));
 		v.leaf = true;
 	}
+
 	public TrieDynamic(String name, int depth) {
 		root = new TrieNode(null, '\0');
 		try {
@@ -42,7 +44,7 @@ root.getDescendant( root.activeNodes,  depth,0);
 				line = in.readLine();
 				if (line == null || line.equals(""))
 					break;
-				insertString(root, line,depth);
+				insertString(root, line, depth);
 				words++;
 			}
 		} catch (IOException e) {
@@ -50,12 +52,11 @@ root.getDescendant( root.activeNodes,  depth,0);
 			e.printStackTrace();
 		}
 
-//		BuildActiveNode(depth);
+		// BuildActiveNode(depth);
 	}
 
-	
 	public static void main(String[] args) {
-		TrieDynamic r = new TrieDynamic("tiny.txt",1);
+		TrieDynamic r = new TrieDynamic("tiny.txt", 1);
 		r.Stats();
 	}
 
