@@ -26,10 +26,12 @@ public class TrieDynamic extends Trie {
 		}
 		else
 			v.MaxLength = StringLength;
+		v.Subtries++;
 		for (char ch : s.toCharArray()) {
 			next = v.children.get(ch);
 			if (next == null)
 				v.children.put(ch, next = new TrieNode(v, ch));
+			next.Subtries++;
 			for (TrieNode n : v.activeNodes.keySet())
 				n.activeNodes.put(v, v.activeNodes.get(n));
 			if(next.MaxLength< (StringLength-CharIndex))

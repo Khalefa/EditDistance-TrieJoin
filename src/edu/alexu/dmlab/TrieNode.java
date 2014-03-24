@@ -26,7 +26,7 @@ class TrieNode {
 												// Integer>();
 	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
 	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
-
+	int Subtries  = 0;//used for count pruning
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -148,7 +148,10 @@ return false;
 				continue;
 				*/
 			if (n == parent) 
-				activeNodes.put(n, 1);
+			{
+				if(Subtries>=2)//count pruning
+					activeNodes.put(n, 1);
+			}
 			else {
 				int l = parentActiveNodes.get(n) + 1;
 
@@ -185,7 +188,8 @@ return false;
 			}
 		}
 		// add myself & my Descendant
-		activeNodes.put(this, 0);
+		if(Subtries>=2)//count pruning
+		 activeNodes.put(this, 0);
 		//getDescendant(activeNodes, depth, 0);
 
 

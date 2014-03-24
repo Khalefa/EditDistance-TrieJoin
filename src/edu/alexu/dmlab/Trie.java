@@ -27,10 +27,12 @@ public class Trie {
 		}
 		else
 			v.MaxLength = StringLength;
+		v.Subtries++;
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
 			if (next == null)
 				v.children.put(ch, next = new TrieNode(v, ch));
+			next.Subtries++;
 			if(next.MaxLength< (StringLength-CharIndex))
 			{
 				next.MinLength = next.MaxLength;
@@ -81,7 +83,7 @@ public class Trie {
 	}
 	public static int printActiveNodes(TrieNode node){
 		int ret = 0;
-		System.out.println(node.character+"  "+node.id +"=> "+node.activeNodes.toString());
+		System.out.println(node.character+"  "+node.id +"  "+node.Subtries+"=> "+node.activeNodes.toString());
 		ret += node.activeNodes.size();
 		for (Character ch : node.children.keySet()) {
 			ret += printActiveNodes(node.children.get(ch));
