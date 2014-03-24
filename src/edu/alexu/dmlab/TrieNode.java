@@ -1,28 +1,27 @@
 package edu.alexu.dmlab;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-
 
 class TrieNode {
 
 	public TrieNode(TrieNode p, char x) {
-	//	super(p, x);
+		// super(p, x);
 		initalize(p, x);
+		activeNodes = new HashMap<TrieNode, Integer>();
 	}
+
 	static int counter = 0;
 	int id;
-	Map<Character, TrieNode> children= new TreeMap<Character, TrieNode>();
+	Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
 	boolean leaf;
 	TrieNode parent;
 	char character;
-	Map<TrieNode, Integer> activeNodes=null;// = new HashMap<TrieNode, Integer>();
+	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
+												// Integer>();
 
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
@@ -31,7 +30,6 @@ class TrieNode {
 		character = x;
 	}
 
-	
 	private int min(int i, Object v) {
 		if (v == null)
 			return i;
@@ -177,13 +175,16 @@ class TrieNode {
 	public int hashCode() {
 		return id;
 	}
-	public HashSet<String> getMatched(){
-		if(!leaf)return null;
-		HashSet<String> l=new HashSet<String>();
-		for(TrieNode n:activeNodes.keySet()){
-			if(n==this)continue;
-			if(n.leaf)
-				l.add(Text()+"-"+n.Text());
+
+	public HashSet<String> getMatched() {
+		if (!leaf)
+			return null;
+		HashSet<String> l = new HashSet<String>();
+		for (TrieNode n : activeNodes.keySet()) {
+			if (n == this)
+				continue;
+			if (n.leaf)
+				l.add(Text() + "-" + n.Text());
 		}
 		return l;
 	}
