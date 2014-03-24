@@ -86,7 +86,7 @@ public class TrieTraversal extends Trie {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		String name = "c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
+		String name = "tiny.txt";// word.format";//tiny.txt";//word.format";
 		TrieTraversal r = new TrieTraversal(name, 1);
 		// r.Stats();
 		// for(TrieNode t: r.GetLeafs()){

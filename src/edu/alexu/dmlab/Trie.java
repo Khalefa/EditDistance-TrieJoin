@@ -18,11 +18,28 @@ public class Trie {
 
 	public void insertString(String s) {
 		TrieNode v = root;
+		int StringLength = s.length();
+		int CharIndex = 0;
+		if(v.MaxLength< StringLength)
+		{
+			v.MinLength = v.MinLength;
+			v.MaxLength = StringLength;
+		}
+		else
+			v.MaxLength = StringLength;
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
 			if (next == null)
 				v.children.put(ch, next = new TrieNode(v, ch));
+			if(next.MaxLength< (StringLength-CharIndex))
+			{
+				next.MinLength = next.MinLength;
+				next.MaxLength = StringLength - CharIndex;
+			}
+			else
+				v.MaxLength = StringLength - CharIndex;
 			v = next;
+			CharIndex++;
 		}
 		v.leaf = true;
 	}

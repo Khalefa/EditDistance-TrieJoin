@@ -22,6 +22,8 @@ class TrieNode {
 	char character;
 	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
 												// Integer>();
+	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
+	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
 
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
@@ -113,6 +115,8 @@ class TrieNode {
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
+			if(n.MaxLength -this.MaxLength >depth && n.MinLength -this.MinLength >depth)
+				continue;
 			if (n == parent)
 				activeNodes.put(n, 1);
 			else {
@@ -125,11 +129,15 @@ class TrieNode {
 		for (TrieNode p : parentActiveNodes.keySet()) {
 			// if p.c=c // we have a match
 			int d = parentActiveNodes.get(p);
+			if(p.MaxLength -this.MaxLength >depth && p.MinLength -this.MinLength >depth)
+				continue;
 			if (p.character == character) {
 				getDescendant(activeNodes, depth, d);
 			}
 
 			for (TrieNode c : p.children.values()) {
+				if(c.MaxLength -this.MaxLength >depth && c.MinLength -this.MinLength >depth)
+					continue;
 				if (c == this)
 					continue;
 				// insertion
