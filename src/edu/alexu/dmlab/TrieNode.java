@@ -26,7 +26,7 @@ class TrieNode {
 												// Integer>();
 	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
 	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
-
+	boolean SingleBranch = true;//stating if the current node have a single child in order to use single branch pruning
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -118,12 +118,13 @@ private int abs(int number)
 	private void mybuildActiveNodes(int depth) {
 
 		Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
+		
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if(  abs(n.MaxLength -this.MaxLength) >depth && abs(n.MinLength -this.MinLength) >depth)
+			if(  (abs(n.MaxLength -this.MaxLength) >depth && abs(n.MinLength -this.MinLength) >depth))
 				continue;
-			if (n == parent)
+			if (n == parent && !n.SingleBranch) //single branch pruning
 				activeNodes.put(n, 1);
 			else {
 				int l = parentActiveNodes.get(n) + 1;
