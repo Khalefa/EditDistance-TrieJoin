@@ -26,7 +26,7 @@ class TrieNode {
 												// Integer>();
 	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
 	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
-	boolean SingleBranch = true;//stating if the current node have a single child in order to use single branch pruning
+
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -85,8 +85,9 @@ return false;
 			// add children to the queue
 			if (p.depth < depth) {
 				for (TrieNode c : p.n.children.values()) {
+					/* no need for this as it is already pruned before calling this function
 					if(lengthPruning(c.MinLength,p.n.MinLength,c.MaxLength,p.n.MaxLength, depth))
-						continue;
+						continue;*/
 					Object v = descendents.get(c);
 					int vv = min(p.depth + 1, v);
 					if (vv <= depth) {
@@ -141,6 +142,11 @@ return false;
 		for (TrieNode n : parentActiveNodes.keySet()) {
 			if(lengthPruning(this.MinLength,n.MinLength,this.MaxLength,n.MaxLength, depth))
 				continue;
+			/*
+			 * needs to rething about single branch pruning
+			if(n==parent && n.children.size()==1 && this.children.size()>1)
+				continue;
+				*/
 			if (n == parent) 
 				activeNodes.put(n, 1);
 			else {
@@ -180,7 +186,7 @@ return false;
 		}
 		// add myself & my Descendant
 		activeNodes.put(this, 0);
-		getDescendant(activeNodes, depth, 0);
+		//getDescendant(activeNodes, depth, 0);
 
 
 	}

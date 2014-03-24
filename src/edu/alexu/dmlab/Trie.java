@@ -30,11 +30,7 @@ public class Trie {
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
 			if (next == null)
-			{
 				v.children.put(ch, next = new TrieNode(v, ch));
-				if(v.children.size() >1)
-					v.SingleBranch = false;
-			}
 			if(next.MaxLength< (StringLength-CharIndex))
 			{
 				next.MinLength = next.MaxLength;

@@ -29,11 +29,7 @@ public class TrieDynamic extends Trie {
 		for (char ch : s.toCharArray()) {
 			next = v.children.get(ch);
 			if (next == null)
-			{
 				v.children.put(ch, next = new TrieNode(v, ch));
-				if(v.children.size() >1)
-					v.SingleBranch = false;
-			}
 			for (TrieNode n : v.activeNodes.keySet())
 				n.activeNodes.put(v, v.activeNodes.get(n));
 			if(next.MaxLength< (StringLength-CharIndex))
