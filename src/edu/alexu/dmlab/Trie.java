@@ -22,7 +22,7 @@ public class Trie {
 		int CharIndex = 0;
 		if(v.MaxLength< StringLength)
 		{
-			v.MinLength = v.MinLength;
+			v.MinLength = v.MaxLength;
 			v.MaxLength = StringLength;
 		}
 		else
@@ -37,7 +37,7 @@ public class Trie {
 			}
 			if(next.MaxLength< (StringLength-CharIndex))
 			{
-				next.MinLength = next.MinLength;
+				next.MinLength = next.MaxLength;
 				next.MaxLength = StringLength - CharIndex;
 			}
 			else
@@ -81,8 +81,17 @@ public class Trie {
 		System.out.println("h3 " + h3.size());
 		System.out.println("h100 " + h100.size());
 		System.out.println(root.counter);
+		System.out.println(printActiveNodes(root));
 	}
-
+	public static int printActiveNodes(TrieNode node){
+		int ret = 0;
+		System.out.println(node.character+"  "+node.id +"=> "+node.activeNodes.toString());
+		ret += node.activeNodes.size();
+		for (Character ch : node.children.keySet()) {
+			ret += printActiveNodes(node.children.get(ch));
+		}
+		return ret;
+	}
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 

@@ -17,15 +17,36 @@ public class TrieDynamic extends Trie {
 		TrieNode v = root;
 		Map<TrieNode, Integer> activeNodes = v.activeNodes;
 		TrieNode next = v;
+		int StringLength = s.length();
+		int CharIndex = 0;
+		if(v.MaxLength< StringLength)
+		{
+			v.MinLength = v.MaxLength;
+			v.MaxLength = StringLength;
+		}
+		else
+			v.MaxLength = StringLength;
 		for (char ch : s.toCharArray()) {
 			next = v.children.get(ch);
 			if (next == null)
+			{
 				v.children.put(ch, next = new TrieNode(v, ch));
+				if(v.children.size() >1)
+					v.SingleBranch = false;
+			}
 			for (TrieNode n : v.activeNodes.keySet())
 				n.activeNodes.put(v, v.activeNodes.get(n));
+			if(next.MaxLength< (StringLength-CharIndex))
+			{
+				next.MinLength = next.MaxLength;
+				next.MaxLength = StringLength - CharIndex;
+			}
+			else
+				v.MaxLength = StringLength - CharIndex;
 			next.BuildActiveNodes(depth);
 			activeNodes = next.activeNodes;
 			v = next;
+			CharIndex++;
 		}
 		for (TrieNode n : next.activeNodes.keySet())
 			n.activeNodes.put(v, v.activeNodes.get(n));

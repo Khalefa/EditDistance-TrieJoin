@@ -47,6 +47,21 @@ private int abs(int number)
 	return (number < 0) ? -number : number;
 	
 }
+private boolean lengthPruning(int minlength1,int minlength2,int maxlength1,int maxlength2,int depth)
+{
+int count = 0;
+if(abs(minlength2-minlength1)>depth)
+	count++;
+if(abs(maxlength2-maxlength1)>depth)
+	count++;
+if(abs(maxlength2-minlength1)>depth)
+	count++;
+if(abs(minlength2-maxlength1)>depth)
+	count++;
+if(count>2)
+	return true;
+return false;
+}
 	public Map<TrieNode, Integer> getDescendant(
 			Map<TrieNode, Integer> descendents, int depth, int k) {
 		class pair {
@@ -61,7 +76,7 @@ private int abs(int number)
 
 		ArrayList<pair> queue = new ArrayList<pair>();
 		queue.add(new pair(this, k));
-		if (k > depth)
+		if (k > depth )
 			return descendents;
 		descendents.put(this, k);
 		while (!queue.isEmpty()) {
@@ -70,6 +85,8 @@ private int abs(int number)
 			// add children to the queue
 			if (p.depth < depth) {
 				for (TrieNode c : p.n.children.values()) {
+					if(lengthPruning(c.MinLength,p.n.MinLength,c.MaxLength,p.n.MaxLength, depth))
+						continue;
 					Object v = descendents.get(c);
 					int vv = min(p.depth + 1, v);
 					if (vv <= depth) {
@@ -122,9 +139,9 @@ private int abs(int number)
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if(  (abs(n.MaxLength -this.MaxLength) >depth && abs(n.MinLength -this.MinLength) >depth))
+			if(lengthPruning(this.MinLength,n.MinLength,this.MaxLength,n.MaxLength, depth))
 				continue;
-			if (n == parent && !n.SingleBranch) //single branch pruning
+			if (n == parent) 
 				activeNodes.put(n, 1);
 			else {
 				int l = parentActiveNodes.get(n) + 1;
@@ -136,14 +153,14 @@ private int abs(int number)
 		for (TrieNode p : parentActiveNodes.keySet()) {
 			// if p.c=c // we have a match
 			int d = parentActiveNodes.get(p);
-			if(abs(p.MaxLength -this.MaxLength) >depth && abs( p.MinLength -this.MinLength) >depth)
+			if(lengthPruning(this.MinLength,p.MinLength,this.MaxLength,p.MaxLength, depth))
 				continue;
 			if (p.character == character) {
 				getDescendant(activeNodes, depth, d);
 			}
 
 			for (TrieNode c : p.children.values()) {
-				if(abs(c.MaxLength -this.MaxLength) >depth && abs(c.MinLength -this.MinLength) >depth)
+				if(lengthPruning(this.MinLength,c.MinLength,this.MaxLength,c.MaxLength, depth))
 					continue;
 				if (c == this)
 					continue;
@@ -165,8 +182,7 @@ private int abs(int number)
 		activeNodes.put(this, 0);
 		getDescendant(activeNodes, depth, 0);
 
-		// System.out.println("Active node " + id + ":" + Text() + ":"
-		// + activeNodes);
+
 	}
 
 	public void BuildActiveNodes(int depth) {
