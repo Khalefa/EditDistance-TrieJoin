@@ -6,11 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 class TrieNode {
 
 	public TrieNode(TrieNode p, char x) {
 		// super(p, x);
 		initalize(p, x);
+		
 		activeNodes = new HashMap<TrieNode, Integer>();
 	}
 
@@ -40,7 +42,11 @@ class TrieNode {
 			return i;
 		return vv;
 	}
-
+private int abs(int number)
+{
+	return (number < 0) ? -number : number;
+	
+}
 	public Map<TrieNode, Integer> getDescendant(
 			Map<TrieNode, Integer> descendents, int depth, int k) {
 		class pair {
@@ -115,7 +121,7 @@ class TrieNode {
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if(n.MaxLength -this.MaxLength >depth && n.MinLength -this.MinLength >depth)
+			if(  abs(n.MaxLength -this.MaxLength) >depth && abs(n.MinLength -this.MinLength) >depth)
 				continue;
 			if (n == parent)
 				activeNodes.put(n, 1);
@@ -129,14 +135,14 @@ class TrieNode {
 		for (TrieNode p : parentActiveNodes.keySet()) {
 			// if p.c=c // we have a match
 			int d = parentActiveNodes.get(p);
-			if(p.MaxLength -this.MaxLength >depth && p.MinLength -this.MinLength >depth)
+			if(abs(p.MaxLength -this.MaxLength) >depth && abs( p.MinLength -this.MinLength) >depth)
 				continue;
 			if (p.character == character) {
 				getDescendant(activeNodes, depth, d);
 			}
 
 			for (TrieNode c : p.children.values()) {
-				if(c.MaxLength -this.MaxLength >depth && c.MinLength -this.MinLength >depth)
+				if(abs(c.MaxLength -this.MaxLength) >depth && abs(c.MinLength -this.MinLength) >depth)
 					continue;
 				if (c == this)
 					continue;
