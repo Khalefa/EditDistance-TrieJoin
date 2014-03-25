@@ -20,7 +20,7 @@ public class TrieTraversal extends Trie {
 			c.BuildActiveNodes(depth);
 			queue.add(c);
 		}
-		root.activeNodes.clear();
+	//	root.activeNodes.clear();
 		while (!queue.isEmpty()) {
 			// get the first node of the queue
 			TrieNode n = queue.remove(0);
@@ -29,7 +29,7 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			n.activeNodes.clear();
+			//n.activeNodes.clear();
 		}
 	}
 
@@ -98,6 +98,7 @@ public class TrieTraversal extends Trie {
 		long sendTime = System.currentTimeMillis();
 		System.out.println(sendTime - startTime);
 		System.out.println(endTime - startTime);
+		r.Stats();
 	}
 
 }

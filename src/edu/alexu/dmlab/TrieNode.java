@@ -85,9 +85,9 @@ return false;
 			// add children to the queue
 			if (p.depth < depth) {
 				for (TrieNode c : p.n.children.values()) {
-					/* no need for this as it is already pruned before calling this function
+					//this part is important for trie traversal to work properly
 					if(lengthPruning(c.MinLength,p.n.MinLength,c.MaxLength,p.n.MaxLength, depth))
-						continue;*/
+						continue;
 					Object v = descendents.get(c);
 					int vv = min(p.depth + 1, v);
 					if (vv <= depth) {
@@ -142,14 +142,10 @@ return false;
 		for (TrieNode n : parentActiveNodes.keySet()) {
 			if(lengthPruning(this.MinLength,n.MinLength,this.MaxLength,n.MaxLength, depth))
 				continue;
-			/*
-			 * needs to rething about single branch pruning
-			if(n==parent && n.children.size()==1 && this.children.size()>1)
-				continue;
-				*/
+			
 			if (n == parent) 
 			{
-				if(Subtries>=2)//count pruning
+			if(Subtries>=2)//count pruning 
 					activeNodes.put(n, 1);
 			}
 			else {
@@ -161,15 +157,19 @@ return false;
 		}
 		for (TrieNode p : parentActiveNodes.keySet()) {
 			// if p.c=c // we have a match
-			int d = parentActiveNodes.get(p);
 			if(lengthPruning(this.MinLength,p.MinLength,this.MaxLength,p.MaxLength, depth))
 				continue;
+			if(p==parent && Subtries<2)
+				continue;
+			int d = parentActiveNodes.get(p);
 			if (p.character == character) {
 				getDescendant(activeNodes, depth, d);
 			}
 
 			for (TrieNode c : p.children.values()) {
 				if(lengthPruning(this.MinLength,c.MinLength,this.MaxLength,c.MaxLength, depth))
+					continue;
+				if(c==parent && Subtries<2)
 					continue;
 				if (c == this)
 					continue;
@@ -188,9 +188,8 @@ return false;
 			}
 		}
 		// add myself & my Descendant
-		if(Subtries>=2)//count pruning
-		 activeNodes.put(this, 0);
-		//getDescendant(activeNodes, depth, 0);
+		activeNodes.put(this, 0);
+		getDescendant(activeNodes, depth, 0);
 
 
 	}
