@@ -27,6 +27,8 @@ class TrieNode {
 	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
 	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
 	int Subtries  = 0;//used for count pruning
+	int[] minHist = new int[26];
+	int[] maxHist = new int[26];
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -34,7 +36,7 @@ class TrieNode {
 		character = x;
 	}
 
-	private int min(int i, Object v) {
+	protected int min(int i, Object v) {
 		if (v == null)
 			return i;
 		int vv = (Integer) v;
@@ -47,7 +49,7 @@ private int abs(int number)
 	return (number < 0) ? -number : number;
 	
 }
-private boolean lengthPruning(int minlength1,int minlength2,int maxlength1,int maxlength2,int depth)
+protected boolean lengthPruning(int minlength1,int minlength2,int maxlength1,int maxlength2,int depth)
 {
 int count = 0;
 if(abs(minlength2-minlength1)>depth)
@@ -133,7 +135,7 @@ return false;
 	}
 
 	// by Khalefa
-	private void mybuildActiveNodes(int depth) {
+	protected void mybuildActiveNodes(int depth) {
 
 		Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
 		
@@ -190,7 +192,6 @@ return false;
 		// add myself & my Descendant
 		activeNodes.put(this, 0);
 		getDescendant(activeNodes, depth, 0);
-
 
 	}
 
