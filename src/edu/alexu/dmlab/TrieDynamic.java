@@ -80,7 +80,7 @@ public class TrieDynamic extends Trie {
 	}
 
 	public static void main(String[] args) {
-		TrieDynamic r = new TrieDynamic("C:\\Users\\Mostafa\\Desktop\\dataset\\querylog.format", 1);
+		TrieDynamic r = new TrieDynamic("test.txt", 1);
 		r.Stats();
 	}
 
