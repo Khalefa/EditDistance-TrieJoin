@@ -6,10 +6,11 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Trie {
 	TrieNode root;
-
+	public static Map<String, Integer> caching_strings=new HashMap<String, Integer>();
 	public Trie() {
 		root = new TrieNode(null, '\0');
 	}
@@ -18,6 +19,10 @@ public class Trie {
 
 	public void insertString(String s) {
 		TrieNode v = root;
+		if(caching_strings.get(s)!=null)
+			return;
+		else
+			caching_strings.put(s, 1);
 		int StringLength = s.length();
 		int CharIndex = 0;
 		if(v.MaxLength< StringLength)
@@ -27,6 +32,7 @@ public class Trie {
 		}
 		else
 			v.MaxLength = StringLength;
+		
 		v.Subtries++;
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);

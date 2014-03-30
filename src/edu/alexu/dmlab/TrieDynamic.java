@@ -14,6 +14,11 @@ public class TrieDynamic extends Trie {
 
 	public static void insertString(TrieNode root, String s, int depth) {
 		root.getDescendant(root.activeNodes, depth, 0);
+
+		if(caching_strings.get(s)!=null)
+			return;
+		else
+			caching_strings.put(s, 1);
 		TrieNode v = root;
 		Map<TrieNode, Integer> activeNodes = v.activeNodes;
 		TrieNode next = v;
