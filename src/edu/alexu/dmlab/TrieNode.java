@@ -6,13 +6,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 class TrieNode {
 
 	public TrieNode(TrieNode p, char x) {
 		// super(p, x);
 		initalize(p, x);
-		
 		activeNodes = new HashMap<TrieNode, Integer>();
 	}
 
@@ -23,12 +21,15 @@ class TrieNode {
 	TrieNode parent;
 	char character;
 	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
-												// Integer>();
-	int MaxLength = 0;//holding maximum length of string in its subtrie for length pruning
-	int MinLength = 0;//holding minimum length of string in its subtrie for length pruning
-	int Subtries  = 0;//used for count pruning
+	// Integer>();
+	int MaxLength = 0;// holding maximum length of string in its subtrie for
+						// length pruning
+	int MinLength = 0;// holding minimum length of string in its subtrie for
+						// length pruning
+	int Subtries = 0;// used for count pruning
 	int[] minHist = new int[26];
 	int[] maxHist = new int[26];
+
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -44,26 +45,28 @@ class TrieNode {
 			return i;
 		return vv;
 	}
-private int abs(int number)
-{
-	return (number < 0) ? -number : number;
-	
-}
-protected boolean lengthPruning(int minlength1,int minlength2,int maxlength1,int maxlength2,int depth)
-{
-int count = 0;
-if(abs(minlength2-minlength1)>depth)
-	count++;
-if(abs(maxlength2-maxlength1)>depth)
-	count++;
-if(abs(maxlength2-minlength1)>depth)
-	count++;
-if(abs(minlength2-maxlength1)>depth)
-	count++;
-if(count>2)
-	return true;
-return false;
-}
+
+	private int abs(int number) {
+		return (number < 0) ? -number : number;
+
+	}
+
+	protected boolean lengthPruning(int minlength1, int minlength2,
+			int maxlength1, int maxlength2, int depth) {
+		int count = 0;
+		if (abs(minlength2 - minlength1) > depth)
+			count++;
+		if (abs(maxlength2 - maxlength1) > depth)
+			count++;
+		if (abs(maxlength2 - minlength1) > depth)
+			count++;
+		if (abs(minlength2 - maxlength1) > depth)
+			count++;
+		if (count > 2)
+			return true;
+		return false;
+	}
+
 	public Map<TrieNode, Integer> getDescendant(
 			Map<TrieNode, Integer> descendents, int depth, int k) {
 		class pair {
@@ -78,7 +81,7 @@ return false;
 
 		ArrayList<pair> queue = new ArrayList<pair>();
 		queue.add(new pair(this, k));
-		if (k > depth )
+		if (k > depth)
 			return descendents;
 		descendents.put(this, k);
 		while (!queue.isEmpty()) {
@@ -87,8 +90,10 @@ return false;
 			// add children to the queue
 			if (p.depth < depth) {
 				for (TrieNode c : p.n.children.values()) {
-					//this part is important for trie traversal to work properly
-					if(lengthPruning(c.MinLength,p.n.MinLength,c.MaxLength,p.n.MaxLength, depth))
+					// this part is important for trie traversal to work
+					// properly
+					if (lengthPruning(c.MinLength, p.n.MinLength, c.MaxLength,
+							p.n.MaxLength, depth))
 						continue;
 					Object v = descendents.get(c);
 					int vv = min(p.depth + 1, v);
@@ -134,23 +139,22 @@ return false;
 
 	}
 
-	// by Khalefa
+	// by Khalefa (modified by mustafa
 	protected void mybuildActiveNodes(int depth) {
 
 		Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
-		
+
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if(lengthPruning(this.MinLength,n.MinLength,this.MaxLength,n.MaxLength, depth))
+			if (lengthPruning(this.MinLength, n.MinLength, this.MaxLength,
+					n.MaxLength, depth))
 				continue;
-			
-			if (n == parent) 
-			{
-			if(Subtries>=2)//count pruning 
+
+			if (n == parent) {
+				//if (Subtries >= 2)// count pruning
 					activeNodes.put(n, 1);
-			}
-			else {
+			} else {
 				int l = parentActiveNodes.get(n) + 1;
 
 				if (l <= depth)
@@ -159,9 +163,10 @@ return false;
 		}
 		for (TrieNode p : parentActiveNodes.keySet()) {
 			// if p.c=c // we have a match
-			if(lengthPruning(this.MinLength,p.MinLength,this.MaxLength,p.MaxLength, depth))
+			if (lengthPruning(this.MinLength, p.MinLength, this.MaxLength,
+					p.MaxLength, depth))
 				continue;
-			if(p==parent && Subtries<2)
+			if (p == parent && Subtries < 2)
 				continue;
 			int d = parentActiveNodes.get(p);
 			if (p.character == character) {
@@ -169,9 +174,10 @@ return false;
 			}
 
 			for (TrieNode c : p.children.values()) {
-				if(lengthPruning(this.MinLength,c.MinLength,this.MaxLength,c.MaxLength, depth))
+				if (lengthPruning(this.MinLength, c.MinLength, this.MaxLength,
+						c.MaxLength, depth))
 					continue;
-				if(c==parent && Subtries<2)
+				if (c == parent && Subtries < 2)
 					continue;
 				if (c == this)
 					continue;
@@ -181,7 +187,6 @@ return false;
 				} else
 
 				if (d <= depth) {
-
 					int m = min(d + 1, activeNodes.get(c));
 					if (m <= depth)
 						activeNodes.put(c, m);
@@ -194,9 +199,55 @@ return false;
 		getDescendant(activeNodes, depth, 0);
 
 	}
+	// by Khalefa
+		private void omybuildActiveNodes(int depth) {
 
+			Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
+			// deletion
+			// add all p active node to this, with distance +1 if possible
+			for (TrieNode n : parentActiveNodes.keySet()) {
+				if (n == parent)
+					activeNodes.put(n, 1);
+				else {
+					int l = parentActiveNodes.get(n) + 1;
+
+					if (l <= depth)
+						activeNodes.put(n, l);
+				}
+			}
+			for (TrieNode p : parentActiveNodes.keySet()) {
+				// if p.c=c // we have a match
+				int d = parentActiveNodes.get(p);
+				if (p.character == character) {
+					getDescendant(activeNodes, depth, d);
+				}
+
+				for (TrieNode c : p.children.values()) {
+					if (c == this)
+						continue;
+					// insertion
+					if (c.character == character) {// we have a match
+						c.getDescendant(activeNodes, depth, d);
+					} else
+
+					if (d <= depth) {
+
+						int m = min(d + 1, activeNodes.get(c));
+						if (m <= depth)
+							activeNodes.put(c, m);
+					}
+
+				}
+			}
+			// add myself & my Descendant
+			activeNodes.put(this, 0);
+			getDescendant(activeNodes, depth, 0);
+
+			// System.out.println("Active node " + id + ":" + Text() + ":"
+			// + activeNodes);
+		}
 	public void BuildActiveNodes(int depth) {
-		mybuildActiveNodes(depth);
+		omybuildActiveNodes(depth);
 	}
 
 	public String Text() {

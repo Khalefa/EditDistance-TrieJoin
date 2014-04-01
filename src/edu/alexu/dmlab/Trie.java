@@ -3,48 +3,43 @@ package edu.alexu.dmlab;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class Trie {
 	TrieNode root;
-	public static Map<String, Integer> caching_strings=new HashMap<String, Integer>();
+	public static Map<String, Integer> caching_strings = new HashMap<String, Integer>();
+
 	public Trie() {
 		root = new TrieNode(null, '\0');
 	}
 
-	
-
 	public void insertString(String s) {
 		TrieNode v = root;
-		if(caching_strings.get(s)!=null)
+		if (caching_strings.get(s) != null)
 			return;
 		else
 			caching_strings.put(s, 1);
 		int StringLength = s.length();
 		int CharIndex = 0;
-		if(v.MaxLength< StringLength)
-		{
+		if (v.MaxLength < StringLength) {
 			v.MinLength = v.MaxLength;
 			v.MaxLength = StringLength;
-		}
-		else
+		} else
 			v.MaxLength = StringLength;
-		
+
 		v.Subtries++;
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
 			if (next == null)
 				v.children.put(ch, next = new TrieNode(v, ch));
 			next.Subtries++;
-			if(next.MaxLength< (StringLength-CharIndex))
-			{
+			if (next.MaxLength < (StringLength - CharIndex)) {
 				next.MinLength = next.MaxLength;
 				next.MaxLength = StringLength - CharIndex;
-			}
-			else
+			} else
 				v.MaxLength = StringLength - CharIndex;
 			v = next;
 			CharIndex++;
@@ -71,8 +66,6 @@ public class Trie {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
 	}
 
 	public void Stats() {
@@ -87,15 +80,46 @@ public class Trie {
 		System.out.println(root.counter);
 		System.out.println(printActiveNodes(root));
 	}
-	public static int printActiveNodes(TrieNode node){
+
+	public static int printActiveNodes(TrieNode node) {
 		int ret = 0;
-		System.out.println(node.character+"  "+node.id +"  "+node.Subtries+"=> "+node.activeNodes.toString());
+		System.out.println(node.character + "  " + node.id + "  "
+				+ node.Subtries + "=> " + node.activeNodes.toString());
 		ret += node.activeNodes.size();
 		for (Character ch : node.children.keySet()) {
 			ret += printActiveNodes(node.children.get(ch));
 		}
 		return ret;
 	}
+
+	public HashSet<String> Matches() {
+		HashSet<String> m = new HashSet<String>();
+		for (TrieNode t : GetLeafs())
+			m.addAll(t.getMatched());
+		return m;
+	}
+
+	public ArrayList<TrieNode> GetLeafs() {
+
+		ArrayList<TrieNode> queue = new ArrayList<TrieNode>();
+		ArrayList<TrieNode> leafs = new ArrayList<TrieNode>();
+
+		for (TrieNode c : root.children.values()) {
+			queue.add(c);
+		}
+		while (!queue.isEmpty()) {
+			// get the first node of the queue
+			TrieNode n = queue.remove(0);
+			if (n.leaf)
+				leafs.add(n);
+
+			for (TrieNode c : n.children.values()) {
+				queue.add(c);
+			}
+		}
+		return leafs;
+	}
+
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 

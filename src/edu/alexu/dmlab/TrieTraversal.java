@@ -20,7 +20,7 @@ public class TrieTraversal extends Trie {
 			c.BuildActiveNodes(depth);
 			queue.add(c);
 		}
-	//	root.activeNodes.clear();
+		// root.activeNodes.clear();
 		while (!queue.isEmpty()) {
 			// get the first node of the queue
 			TrieNode n = queue.remove(0);
@@ -29,28 +29,8 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			//n.activeNodes.clear();
+			 n.activeNodes=null;
 		}
-	}
-
-	public ArrayList<TrieNode> GetLeafs() {
-		ArrayList<TrieNode> queue = new ArrayList<TrieNode>();
-		ArrayList<TrieNode> leafs = new ArrayList<TrieNode>();
-
-		for (TrieNode c : root.children.values()) {
-			queue.add(c);
-		}
-		while (!queue.isEmpty()) {
-			// get the first node of the queue
-			TrieNode n = queue.remove(0);
-			if (n.leaf)
-				leafs.add(n);
-
-			for (TrieNode c : n.children.values()) {
-				queue.add(c);
-			}
-		}
-		return leafs;
 	}
 
 	public TrieTraversal(String name, int depth) {
@@ -68,37 +48,32 @@ public class TrieTraversal extends Trie {
 				insertString(line);
 				words++;
 			}
+			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		BuildActiveNode(depth);
-	}
-
-	public HashSet<String> Matches() {
-		HashSet<String> m = new HashSet<String>();
-		for (TrieNode t : GetLeafs())
-			m.addAll(t.getMatched());
-		return m;
+		
 	}
 
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		String name = "C:\\Users\\Mostafa\\Desktop\\dataset\\querylog.format";// word.format";//tiny.txt";//word.format";
+		String name = "tiny.txt";// "C:\\Users\\Mostafa\\Desktop\\dataset\\querylog.format";//
+									// word.format";//tiny.txt";//word.format";
 		TrieTraversal r = new TrieTraversal(name, 1);
-		// r.Stats();
-		// for(TrieNode t: r.GetLeafs()){
-		// if (t.Text()=="sarah")
-		// System.out.println(t.Text()+" "+ t.getMatched());
-		// }
 		long endTime = System.currentTimeMillis();
-		r.Matches();
+		HashSet<String> m = r.Matches();
+		for (String s : m) {
+			System.out.println(s);
+		}
+
 		long sendTime = System.currentTimeMillis();
 		System.out.println(sendTime - startTime);
 		System.out.println(endTime - startTime);
-		r.Stats();
+		//r.Stats();
 	}
 
 }
