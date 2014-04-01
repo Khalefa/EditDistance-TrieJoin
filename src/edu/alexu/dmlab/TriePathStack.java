@@ -66,13 +66,12 @@ public class TriePathStack extends Trie {
 			}
 			if (parent != StackTraversal.peek()) {
 				ChangeIterator = true;
-				//if (parent.instack == false)
-					//parent.activeNodes = null;
 			}
 
 			parent = StackTraversal.pop();
 			//parent.instack = false;
 			if (ChangeIterator) {
+				parent.activeNodes.clear();
 				children = parent.children.entrySet();
 				ChildrenIterator = children.iterator();
 				ChangeIterator = false;
@@ -106,7 +105,7 @@ public class TriePathStack extends Trie {
 			}
 			//n.instack=false;
 			if(!n.leaf)
-			n.activeNodes=null;
+			n.activeNodes.clear();
 		}
 	}
 
