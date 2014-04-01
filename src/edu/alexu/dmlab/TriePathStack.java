@@ -65,6 +65,7 @@ public class TriePathStack extends Trie {
 			parent = StackTraversal.pop();
 			if(ChangeIterator)
 			{
+				parent.activeNodes.clear();
 				children = parent.children.entrySet();
 				ChildrenIterator = children.iterator();
 				ChangeIterator = false;
