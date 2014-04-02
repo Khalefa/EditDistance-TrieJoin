@@ -38,7 +38,7 @@ public class TriePathStack extends Trie {
 		// System.out.println("root" + root.id + root.activeNodes);
 		Stack<TrieNode> StackTraversal = new Stack<TrieNode>();
 		StackTraversal.push(root);
-		//root.instack = true;
+		// root.instack = true;
 		Set<Entry<Character, TrieNode>> children = root.children.entrySet();
 		Set<Entry<Character, TrieNode>> children2 = null;
 		Iterator<Entry<Character, TrieNode>> ChildrenIterator = children
@@ -57,7 +57,7 @@ public class TriePathStack extends Trie {
 				for (TrieNode n : child.activeNodes.keySet())
 					n.activeNodes.put(child, child.activeNodes.get(n));
 				StackTraversal.push(child);
-			//	child.instack = true;
+				// child.instack = true;
 				children2 = parent.children.entrySet();
 				ParentIterator = children2.iterator();
 				if (!ParentIterator.hasNext())
@@ -69,7 +69,7 @@ public class TriePathStack extends Trie {
 			}
 
 			parent = StackTraversal.pop();
-			//parent.instack = false;
+			// parent.instack = false;
 			if (ChangeIterator) {
 				parent.activeNodes.clear();
 				children = parent.children.entrySet();
@@ -89,23 +89,20 @@ public class TriePathStack extends Trie {
 		Stack<TrieNode> stack = new Stack<TrieNode>();
 		stack.push(root);
 		root.getDescendant(root.activeNodes, depth, 0);
-		//root.instack = true;
-		
+
 		while (!stack.isEmpty()) {
 			// pop the element from stack
 			TrieNode n = stack.pop();
-			//System.out.println(n.id-1);
-			if(n.leaf==true){
-				
+			// System.out.println(n.id-1);
+			if (n.leaf == true) {
+
 			}
 			for (TrieNode x : n.children.values()) {
 				stack.push(x);
 				x.BuildActiveNodes(depth);
-			//	x.instack=true;
 			}
-			//n.instack=false;
-			if(!n.leaf)
-			n.activeNodes.clear();
+			//if (!n.leaf)
+			//	n.activeNodes.clear();
 		}
 	}
 
@@ -115,16 +112,20 @@ public class TriePathStack extends Trie {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		long startTime = System.currentTimeMillis();
-		TriePathStack r = new TriePathStack("c:\\data\\word.format", 1);
+		TriePathStack r = new TriePathStack("test.txt", 1);
+
+		for (TrieNode n : r.GetLeafs()) {
+			System.out.println(n.id + ":" + n.activeNodes);
+		}
 		System.out.println("-----------------------------------------------");
-		//r.DFS(1);
+		// r.DFS(1);
 		HashSet<String> m = r.Matches();
 		System.out.println(m.size());
 		long endTime = System.currentTimeMillis();
-		System.out.println(endTime - startTime);
-		//for (String s : m) {
-			//System.out.println(s);
-		//}
+		// System.out.println(endTime - startTime);
+		for (String s : m) {
+			System.out.println(s);
+		}
 
 		// r.Stats();
 	}

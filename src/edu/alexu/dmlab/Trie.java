@@ -22,6 +22,7 @@ public class Trie {
 			return;
 		else
 			caching_strings.put(s, 1);
+		
 		int StringLength = s.length();
 		int CharIndex = 0;
 		if (v.MaxLength < StringLength) {
@@ -84,7 +85,7 @@ public class Trie {
 	public static int printActiveNodes(TrieNode node) {
 		int ret = 0;
 		System.out.println(node.character + "  " + node.id + "  "
-				+ node.Subtries + "=> " + node.activeNodes.toString());
+				+node.Text()  + "=> " + node.activeNodes.toString());
 		ret += node.activeNodes.size();
 		for (Character ch : node.children.keySet()) {
 			ret += printActiveNodes(node.children.get(ch));
@@ -123,9 +124,9 @@ public class Trie {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		String name = "c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
+		String name = "test.txt";// word.format";//tiny.txt";//word.format";
 		Trie r = new Trie(name);
-		// r.Stats();
+		r.Stats();
 		// for(TrieNode t: r.GetLeafs()){
 		// if (t.Text()=="sarah")
 		// System.out.println(t.Text()+" "+ t.getMatched());

@@ -152,8 +152,8 @@ class TrieNode {
 				continue;
 
 			if (n == parent) {
-				//if (Subtries >= 2)// count pruning
-					activeNodes.put(n, 1);
+				// if (Subtries >= 2)// count pruning
+				activeNodes.put(n, 1);
 			} else {
 				int l = parentActiveNodes.get(n) + 1;
 
@@ -199,53 +199,55 @@ class TrieNode {
 		getDescendant(activeNodes, depth, 0);
 
 	}
+
 	// by Khalefa
-		private void omybuildActiveNodes(int depth) {
+	private void omybuildActiveNodes(int depth) {
 
-			Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
-			// deletion
-			// add all p active node to this, with distance +1 if possible
-			for (TrieNode n : parentActiveNodes.keySet()) {
-				if (n == parent)
-					activeNodes.put(n, 1);
-				else {
-					int l = parentActiveNodes.get(n) + 1;
+		Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
+		// deletion
+		// add all p active node to this, with distance +1 if possible
+		for (TrieNode n : parentActiveNodes.keySet()) {
+			if (n == parent)
+				activeNodes.put(n, 1);
+			else {
+				int l = parentActiveNodes.get(n) + 1;
 
-					if (l <= depth)
-						activeNodes.put(n, l);
-				}
+				if (l <= depth)
+					activeNodes.put(n, l);
 			}
-			for (TrieNode p : parentActiveNodes.keySet()) {
-				// if p.c=c // we have a match
-				int d = parentActiveNodes.get(p);
-				if (p.character == character) {
-					getDescendant(activeNodes, depth, d);
-				}
-
-				for (TrieNode c : p.children.values()) {
-					if (c == this)
-						continue;
-					// insertion
-					if (c.character == character) {// we have a match
-						c.getDescendant(activeNodes, depth, d);
-					} else
-
-					if (d <= depth) {
-
-						int m = min(d + 1, activeNodes.get(c));
-						if (m <= depth)
-							activeNodes.put(c, m);
-					}
-
-				}
-			}
-			// add myself & my Descendant
-			activeNodes.put(this, 0);
-			getDescendant(activeNodes, depth, 0);
-
-			// System.out.println("Active node " + id + ":" + Text() + ":"
-			// + activeNodes);
 		}
+		for (TrieNode p : parentActiveNodes.keySet()) {
+			// if p.c=c // we have a match
+			int d = parentActiveNodes.get(p);
+			if (p.character == character) {
+				getDescendant(activeNodes, depth, d);
+			}
+
+			for (TrieNode c : p.children.values()) {
+				if (c == this)
+					continue;
+				// insertion
+				if (c.character == character) {// we have a match
+					c.getDescendant(activeNodes, depth, d);
+				} else
+
+				if (d <= depth) {
+
+					int m = min(d + 1, activeNodes.get(c));
+					if (m <= depth)
+						activeNodes.put(c, m);
+				}
+
+			}
+		}
+		// add myself & my Descendant
+		activeNodes.put(this, 0);
+		getDescendant(activeNodes, depth, 0);
+
+		// System.out.println("Active node " + id + ":" + Text() + ":"
+		// + activeNodes);
+	}
+
 	public void BuildActiveNodes(int depth) {
 		omybuildActiveNodes(depth);
 	}

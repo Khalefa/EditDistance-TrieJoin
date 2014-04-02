@@ -29,7 +29,7 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			 n.activeNodes=null;
+		//	 n.activeNodes=null;
 		}
 	}
 
@@ -73,7 +73,7 @@ public class TrieTraversal extends Trie {
 		long sendTime = System.currentTimeMillis();
 		System.out.println(sendTime - startTime);
 		System.out.println(endTime - startTime);
-		//r.Stats();
+		r.Stats();
 	}
 
 }
