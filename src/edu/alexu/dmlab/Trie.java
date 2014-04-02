@@ -3,9 +3,9 @@ package edu.alexu.dmlab;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Trie {
 	TrieNode root;
@@ -14,10 +14,11 @@ public class Trie {
 		root = new TrieNode(null, '\0');
 	}
 
-	
-
 	public void insertString(String s) {
+		
 		TrieNode v = root;
+		v.updateleghts(s.length());
+		
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
 			if (next == null)
@@ -47,7 +48,6 @@ public class Trie {
 			e.printStackTrace();
 		}
 
-		
 	}
 
 	public void Stats() {
@@ -60,6 +60,33 @@ public class Trie {
 		System.out.println("h3 " + h3.size());
 		System.out.println("h100 " + h100.size());
 		System.out.println(root.counter);
+	}
+	public HashSet<String> Matches() {
+		HashSet<String> m = new HashSet<String>();
+		for (TrieNode t : GetLeafs())
+			m.addAll(t.getMatched());
+		return m;
+	}
+
+	public ArrayList<TrieNode> GetLeafs() {
+
+		ArrayList<TrieNode> queue = new ArrayList<TrieNode>();
+		ArrayList<TrieNode> leafs = new ArrayList<TrieNode>();
+
+		for (TrieNode c : root.children.values()) {
+			queue.add(c);
+		}
+		while (!queue.isEmpty()) {
+			// get the first node of the queue
+			TrieNode n = queue.remove(0);
+			if (n.leaf)
+				leafs.add(n);
+
+			for (TrieNode c : n.children.values()) {
+				queue.add(c);
+			}
+		}
+		return leafs;
 	}
 
 	public static void main(String[] args) {

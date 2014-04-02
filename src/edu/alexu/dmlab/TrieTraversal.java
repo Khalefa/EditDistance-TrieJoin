@@ -29,7 +29,7 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			n.activeNodes.clear();
+			if(!n.leaf) n.activeNodes.clear();
 		}
 	}
 
@@ -86,15 +86,16 @@ public class TrieTraversal extends Trie {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		String name = "c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
+		String name = "test.txt";// word.format";//tiny.txt";//word.format";
 		TrieTraversal r = new TrieTraversal(name, 1);
-		// r.Stats();
-		// for(TrieNode t: r.GetLeafs()){
+		//r.Matches();
+		r.Stats();
+		for(TrieNode t: r.GetLeafs()){
 		// if (t.Text()=="sarah")
-		// System.out.println(t.Text()+" "+ t.getMatched());
-		// }
+				System.out.println(t.Text()+" "+ t.getMatched());
+		 }
 		long endTime = System.currentTimeMillis();
-		r.Matches();
+		
 		long sendTime = System.currentTimeMillis();
 		System.out.println(sendTime - startTime);
 		System.out.println(endTime - startTime);

@@ -7,13 +7,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 class TrieNode {
-
-	public TrieNode(TrieNode p, char x) {
-		// super(p, x);
-		initalize(p, x);
-		activeNodes = new HashMap<TrieNode, Integer>();
-	}
-
 	static int counter = 0;
 	int id;
 	Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
@@ -22,7 +15,19 @@ class TrieNode {
 	char character;
 	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
 												// Integer>();
-
+	int len_min;
+	int len_max;
+	void updateleghts(int l){
+		if(len_min<l) len_min=l;
+		if(len_max>l) len_max=l;
+	}
+	 
+	public TrieNode(TrieNode p, char x) {
+		// super(p, x);
+		initalize(p, x);
+		activeNodes = new HashMap<TrieNode, Integer>();
+	}
+	
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -174,6 +179,12 @@ class TrieNode {
 	@Override
 	public int hashCode() {
 		return id;
+	}
+
+	//
+	// prune the active node set
+	public void prune() {
+
 	}
 
 	public HashSet<String> getMatched() {
