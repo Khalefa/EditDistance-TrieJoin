@@ -9,20 +9,27 @@ import java.util.HashSet;
 
 public class Trie {
 	TrieNode root;
-
+	boolean delete_not_needed_activenodes = false;
+	//auxilaries access to nodes directly for debugging only
+	HashMap<Integer, TrieNode> nodes=new HashMap<Integer, TrieNode>();
 	public Trie() {
 		root = new TrieNode(null, '\0');
 	}
 
 	public void insertString(String s) {
-		
+
 		TrieNode v = root;
-		v.updateleghts(s.length());
-		
+		v.length_interval.add(s.length());
+		nodes.put(v.id,v);
+		int d = 1;
 		for (char ch : s.toCharArray()) {
 			TrieNode next = v.children.get(ch);
-			if (next == null)
+			if (next == null){
 				v.children.put(ch, next = new TrieNode(v, ch));
+			}else next.subtries++;
+			next.length_interval.add(s.length() - d);
+			nodes.put(next.id,next);
+			d++;
 			v = next;
 		}
 		v.leaf = true;
@@ -61,6 +68,7 @@ public class Trie {
 		System.out.println("h100 " + h100.size());
 		System.out.println(root.counter);
 	}
+
 	public HashSet<String> Matches() {
 		HashSet<String> m = new HashSet<String>();
 		for (TrieNode t : GetLeafs())
@@ -89,10 +97,43 @@ public class Trie {
 		return leafs;
 	}
 
+	public ArrayList<TrieNode> GetNodes() {
+
+		ArrayList<TrieNode> queue = new ArrayList<TrieNode>();
+		ArrayList<TrieNode> nodes = new ArrayList<TrieNode>();
+
+		for (TrieNode c : root.children.values()) {
+			queue.add(c);
+		}
+		nodes.add(root);
+		while (!queue.isEmpty()) {
+			// get the first node of the queue
+			TrieNode n = queue.remove(0);
+			nodes.add(n);
+			for (TrieNode c : n.children.values()) {
+				queue.add(c);
+			}
+		}
+		return nodes;
+	}
+
+	public long getActiveNode() {
+		long count = 0;
+		for (TrieNode n : GetNodes())
+			count += n.activeNodes.size();
+		return count;
+	}
+
+	public void Print() {
+		for (TrieNode n : GetNodes())
+			System.out.println(n);
+
+	}
+
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		String name = "c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
+		String name = "test.txt";// c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
 		Trie r = new Trie(name);
 		// r.Stats();
 		// for(TrieNode t: r.GetLeafs()){
@@ -100,6 +141,7 @@ public class Trie {
 		// System.out.println(t.Text()+" "+ t.getMatched());
 		// }
 		long endTime = System.currentTimeMillis();
+		r.Print();
 		System.out.println(endTime - startTime);
 	}
 

@@ -20,7 +20,8 @@ public class TrieTraversal extends Trie {
 			c.BuildActiveNodes(depth);
 			queue.add(c);
 		}
-		root.activeNodes.clear();
+		if (delete_not_needed_activenodes)
+			root.activeNodes.clear();
 		while (!queue.isEmpty()) {
 			// get the first node of the queue
 			TrieNode n = queue.remove(0);
@@ -29,7 +30,8 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			if(!n.leaf) n.activeNodes.clear();
+			if (delete_not_needed_activenodes && !n.leaf)
+				n.activeNodes.clear();
 		}
 	}
 
@@ -87,18 +89,23 @@ public class TrieTraversal extends Trie {
 		long startTime = System.currentTimeMillis();
 
 		String name = "test.txt";// word.format";//tiny.txt";//word.format";
-		TrieTraversal r = new TrieTraversal(name, 1);
-		//r.Matches();
-		r.Stats();
-		for(TrieNode t: r.GetLeafs()){
-		// if (t.Text()=="sarah")
-				System.out.println(t.Text()+" "+ t.getMatched());
-		 }
+		Global.prune = false; // 74
+		TrieTraversal r = new TrieTraversal(name, 0);
+
+		r.Print();
+		// r.Matches();
+		// r.Stats();
+
+		System.out.println("active nodes" + r.getActiveNode());
+		System.out.println("Matched" + r.Matches().size());
+		for (String t : r.Matches()) {
+			// System.out.println(t);
+		}
+
 		long endTime = System.currentTimeMillis();
-		
-		long sendTime = System.currentTimeMillis();
-		System.out.println(sendTime - startTime);
-		System.out.println(endTime - startTime);
+
+		System.out.println("Time " + (endTime - startTime));
+
 	}
 
 }

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.alexu.util.Interval;
+
 class TrieNode {
 	static int counter = 0;
 	int id;
@@ -15,19 +17,15 @@ class TrieNode {
 	char character;
 	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
 												// Integer>();
-	int len_min;
-	int len_max;
-	void updateleghts(int l){
-		if(len_min<l) len_min=l;
-		if(len_max>l) len_max=l;
-	}
-	 
+	public Interval length_interval = new Interval();
+	public int subtries = 1;
+
 	public TrieNode(TrieNode p, char x) {
 		// super(p, x);
 		initalize(p, x);
 		activeNodes = new HashMap<TrieNode, Integer>();
 	}
-	
+
 	public void initalize(TrieNode p, char x) {
 		this.id = counter;
 		counter++;
@@ -85,7 +83,7 @@ class TrieNode {
 		return descendents;
 	}
 
-	/* Author and maintained By Moustafa */
+	/* Authored and maintained By Moustafa */
 	private void buildActiveNodes(int depth) {
 		Map<TrieNode, Integer> parentActiveNodes = parent.activeNodes;
 
@@ -118,7 +116,7 @@ class TrieNode {
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if (n == parent)
+			if (n == parent && depth >0)
 				activeNodes.put(n, 1);
 			else {
 				int l = parentActiveNodes.get(n) + 1;
@@ -161,6 +159,8 @@ class TrieNode {
 
 	public void BuildActiveNodes(int depth) {
 		mybuildActiveNodes(depth);
+		if (Global.prune)
+			prune(depth);
 	}
 
 	public String Text() {
@@ -172,7 +172,10 @@ class TrieNode {
 
 	@Override
 	public String toString() {
-		return id + ":" + character;
+		String s = "";
+		for (TrieNode n : activeNodes.keySet())
+			s = s + n.id + " " + n.character + ",";
+		return id + ":" + Text() + ":" + length_interval.toString() + ":" + s;
 
 	};
 
@@ -183,8 +186,28 @@ class TrieNode {
 
 	//
 	// prune the active node set
-	public void prune() {
+	public void prune(int d) {
+		ArrayList<TrieNode> todel = new ArrayList<TrieNode>();
+		// length pruning
+		for (TrieNode n : activeNodes.keySet()) {
+			if (!length_interval.intersect(n.length_interval, d)) {
+				todel.add(n);
+			}
 
+		}
+		// single branch pruning
+		if (this.parent.children.size() == 1) {
+			todel.add(parent);
+		}
+		// count pruning
+		if(subtries==1){
+			for(TrieNode n: children.values()){ //it should be only one
+				todel.add(n);
+			}
+		}
+		for (TrieNode n : todel) {
+			activeNodes.remove(n);
+		}
 	}
 
 	public HashSet<String> getMatched() {
