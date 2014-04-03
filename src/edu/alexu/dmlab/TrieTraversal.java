@@ -20,8 +20,8 @@ public class TrieTraversal extends Trie {
 			c.BuildActiveNodes(depth);
 			queue.add(c);
 		}
-		if (delete_not_needed_activenodes)
-			root.activeNodes.clear();
+		if (Global.delete_not_needed_activenodes)
+			root.activeNodes = null;
 		while (!queue.isEmpty()) {
 			// get the first node of the queue
 			TrieNode n = queue.remove(0);
@@ -30,8 +30,8 @@ public class TrieTraversal extends Trie {
 				c.BuildActiveNodes(depth);
 				queue.add(c);
 			}
-			if (delete_not_needed_activenodes && !n.leaf)
-				n.activeNodes.clear();
+			if (Global.delete_not_needed_activenodes && !n.leaf)
+				n.activeNodes = null;
 		}
 	}
 
@@ -55,7 +55,7 @@ public class TrieTraversal extends Trie {
 		return leafs;
 	}
 
-	public TrieTraversal(String name, int depth) {
+	public TrieTraversal(String name, int wcount, int depth) {
 		root = (TrieNode) new TrieNode(null, '\0');
 		try {
 			String line;
@@ -69,6 +69,9 @@ public class TrieTraversal extends Trie {
 					break;
 				insertString(line);
 				words++;
+				if (wcount == 0)
+					break;
+				wcount--;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -90,7 +93,7 @@ public class TrieTraversal extends Trie {
 
 		String name = "test.txt";// word.format";//tiny.txt";//word.format";
 		Global.prune = false; // 74
-		TrieTraversal r = new TrieTraversal(name, 0);
+		TrieTraversal r = new TrieTraversal(name, 0,0);
 
 		r.Print();
 		// r.Matches();

@@ -1,68 +1,75 @@
 package edu.alexu.dmlab;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import edu.alexu.util.*;
+
 public class Test {
 
 	public Test() {
 		// TODO Auto-generated constructor stub
 	}
 
-	static void a(String name, int depth) {
-		long startTime = System.currentTimeMillis();
-		TriePathStack r = new TriePathStack(name, depth);
-		System.out.println("-----------------------------------------------");
-		// r.DFS(1);
-		HashSet<String> m = r.Matches();
-		System.out.println(m.size());
-		//for(String s: m){
-		//	System.out.println(s);
-		//}
-		long endTime = System.currentTimeMillis();
-		System.out.println("time" + (endTime - startTime));
-	}
-
-	static void b(String name, int depth) {
+	static void test(String name, int limit, int depth) {
 		long startTime = System.currentTimeMillis();
 
-		// String name = "c:\\data\\word.format";//
-		// "C:\\Users\\Mostafa\\Desktop\\dataset\\querylog.format";//
-		// word.format";//tiny.txt";//word.format";
-		TrieTraversal r = new TrieTraversal(name, depth);
-		HashSet<String> m = r.Matches();
-		//for(String s: m){
-		//	System.out.println(s);
-		//}
-		System.out.println(m.size());
-		long endTime = System.currentTimeMillis();
+		Trie r;
+		if (Global.alg == "ps")
+			r = new TriePathStack(name, limit, depth);
+		else if (Global.alg == "tt")
+			r = new TrieTraversal(name, limit, depth);
+		else
+			r = new Trie(name, limit);
 
-		System.out.println("time" + (endTime - startTime));
+		HashSet<String> m = r.Matches();
+		System.out.print(Global.str());
+		System.out.print("\t" + r.getActiveNode());
+		System.out.print("\t " + m.size());
+
+		long endTime = System.currentTimeMillis();
+		System.out.println("\t" + (endTime - startTime));
 	}
-/*word format 2
- * 	Words146034
-	-----------------------------------------------
-	5803239
-	time140368
-	Exception in thread "main" java.lang.NullPointerException
-		at edu.alexu.dmlab.TrieNode.getMatched(TrieNode.java:275)
-		at edu.alexu.dmlab.Trie.Matches(Trie.java:98)
-		at edu.alexu.dmlab.Test.b(Test.java:30)
-		at edu.alexu.dmlab.Test.main(Test.java:44)
-*/
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-	
-		
-		/*String n = "c:\\data\\word.format";//word.format";
-		n = "test.txt";
-		a(n, 1);
-		System.out.println("-----------------------------------------------");
-		
+
+	static void runtest() {
+		String n = "c:\\data\\word.format";
+		// n = "test.txt";
+
+		int d = 1;
+		int limit = -2;
+
 		TrieNode.counter = 0;
-		
-		b(n, 1);*/
+		test(n, limit, d);
+
+	}
+
+	static void test() {
+		Global.prune = false;
+		Global.delete_not_needed_activenodes = false;
+		runtest();
+		Global.prune = true;
+		Global.delete_not_needed_activenodes = false;
+		runtest();
+		Global.prune = false;
+		Global.delete_not_needed_activenodes = true;
+		runtest();
+		Global.prune = true;
+		Global.delete_not_needed_activenodes = true;
+		runtest();
+	}
+
+	public static void main(String[] args) {
+		// EditDistance e=new EditDistance("c:\\data\\word.format",50000, 1);
+		// 50000 count54518
+
+		// active nodes212798Matched52821
+		// time2907
+		test();
+		Global.alg = "ps";
+		test();
 	}
 
 }

@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 public class TriePathStack extends Trie {
 
-	public TriePathStack(String name, int depth) {
+	public TriePathStack(String name, int wcount, int depth) {
 		// TODO Auto-generated constructor stub
 		int words = 0;
 		root = (TrieNode) new TrieNode(null, '\0');
@@ -22,25 +22,28 @@ public class TriePathStack extends Trie {
 					break;
 				insertString(line);
 				words++;
+				if (wcount == 0)
+					break;
+				wcount--;
 			}
 			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Words" + words);
+		//System.out.println("Words" + words);
 		// BuildActiveNode(depth);
 		DFS(depth);
 	}
 
-	//* u should not ever use this function */
+	// * u should not ever use this function */
 	public void BuildActiveNode(int depth) throws Exception {
-		//throw new Exception("Do not use me");
+		// throw new Exception("Do not use me");
 		root.getDescendant(root.activeNodes, depth, 0);
 		// System.out.println("root" + root.id + root.activeNodes);
 		Stack<TrieNode> StackTraversal = new Stack<TrieNode>();
 		StackTraversal.push(root);
-		//root.instack = true;
+		// root.instack = true;
 		Set<Entry<Character, TrieNode>> children = root.children.entrySet();
 		Set<Entry<Character, TrieNode>> children2 = null;
 		Iterator<Entry<Character, TrieNode>> ChildrenIterator = children
@@ -59,7 +62,7 @@ public class TriePathStack extends Trie {
 				for (TrieNode n : child.activeNodes.keySet())
 					n.activeNodes.put(child, child.activeNodes.get(n));
 				StackTraversal.push(child);
-			//	child.instack = true;
+				// child.instack = true;
 				children2 = parent.children.entrySet();
 				ParentIterator = children2.iterator();
 				if (!ParentIterator.hasNext())
@@ -71,7 +74,7 @@ public class TriePathStack extends Trie {
 			}
 
 			parent = StackTraversal.pop();
-			//parent.instack = false;
+			// parent.instack = false;
 			if (ChangeIterator) {
 				parent.activeNodes.clear();
 				children = parent.children.entrySet();
@@ -91,23 +94,19 @@ public class TriePathStack extends Trie {
 		Stack<TrieNode> stack = new Stack<TrieNode>();
 		stack.push(root);
 		root.getDescendant(root.activeNodes, depth, 0);
-		//root.instack = true;
-		
+
 		while (!stack.isEmpty()) {
 			// pop the element from stack
 			TrieNode n = stack.pop();
-			//System.out.println(n.id-1);
-			if(n.leaf==true){
-				
-			}
+			// System.out.println(n.id-1);
+
 			for (TrieNode x : n.children.values()) {
 				stack.push(x);
 				x.BuildActiveNodes(depth);
-			//	x.instack=true;
 			}
-			//n.instack=false;
-			if(!n.leaf)
-			n.activeNodes.clear();
+
+			if (!n.leaf && Global.delete_not_needed_activenodes)
+				n.activeNodes = null;
 		}
 	}
 
@@ -117,16 +116,16 @@ public class TriePathStack extends Trie {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		long startTime = System.currentTimeMillis();
-		TriePathStack r = new TriePathStack("c:\\data\\word.format", 1);
+		TriePathStack r = new TriePathStack("c:\\data\\word.format", 50000, 1);
 		System.out.println("-----------------------------------------------");
-		//r.DFS(1);
+		// r.DFS(1);
 		HashSet<String> m = r.Matches();
 		System.out.println(m.size());
 		long endTime = System.currentTimeMillis();
 		System.out.println(endTime - startTime);
-		//for (String s : m) {
-			//System.out.println(s);
-		//}
+		// for (String s : m) {
+		// System.out.println(s);
+		// }
 
 		// r.Stats();
 	}

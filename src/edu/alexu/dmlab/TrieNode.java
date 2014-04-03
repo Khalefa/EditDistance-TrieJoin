@@ -197,10 +197,14 @@ class TrieNode {
 		}
 		// single branch pruning
 		if (this.parent.children.size() == 1) {
+			if(activeNodes.containsKey(parent))
+			if(!leaf&&!parent.leaf ) 
+			
 			todel.add(parent);
 		}
+		//remove parent of parents, up to depth
 		// count pruning
-		if(subtries==1){
+	if(subtries==1){
 			for(TrieNode n: children.values()){ //it should be only one
 				todel.add(n);
 			}

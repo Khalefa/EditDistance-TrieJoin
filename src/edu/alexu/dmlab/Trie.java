@@ -9,9 +9,10 @@ import java.util.HashSet;
 
 public class Trie {
 	TrieNode root;
-	boolean delete_not_needed_activenodes = false;
-	//auxilaries access to nodes directly for debugging only
-	HashMap<Integer, TrieNode> nodes=new HashMap<Integer, TrieNode>();
+
+	// auxilaries access to nodes directly for debugging only
+	HashMap<Integer, TrieNode> nodes = new HashMap<Integer, TrieNode>();
+
 	public Trie() {
 		root = new TrieNode(null, '\0');
 	}
@@ -20,22 +21,24 @@ public class Trie {
 
 		TrieNode v = root;
 		v.length_interval.add(s.length());
-		nodes.put(v.id,v);
+		nodes.put(v.id, v);
 		int d = 1;
 		for (char ch : s.toCharArray()) {
+			//v.subtries++;
 			TrieNode next = v.children.get(ch);
-			if (next == null){
+			if (next == null) {
 				v.children.put(ch, next = new TrieNode(v, ch));
-			}else next.subtries++;
+			} else
+				next.subtries++;
 			next.length_interval.add(s.length() - d);
-			nodes.put(next.id,next);
+			nodes.put(next.id, next);
 			d++;
 			v = next;
 		}
 		v.leaf = true;
 	}
 
-	public Trie(String name) {
+	public Trie(String name, int wcount) {
 		root = (TrieNode) new TrieNode(null, '\0');
 		try {
 			String line;
@@ -49,6 +52,8 @@ public class Trie {
 					break;
 				insertString(line);
 				words++;
+				if(wcount==0)break;
+				wcount--;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -120,7 +125,8 @@ public class Trie {
 	public long getActiveNode() {
 		long count = 0;
 		for (TrieNode n : GetNodes())
-			count += n.activeNodes.size();
+			if (n.activeNodes != null)
+				count += n.activeNodes.size();
 		return count;
 	}
 
@@ -134,7 +140,7 @@ public class Trie {
 		long startTime = System.currentTimeMillis();
 
 		String name = "test.txt";// c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
-		Trie r = new Trie(name);
+		Trie r = new Trie(name,0);
 		// r.Stats();
 		// for(TrieNode t: r.GetLeafs()){
 		// if (t.Text()=="sarah")
