@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.alexu.util.Hist;
 import edu.alexu.util.Interval;
 
 class TrieNode {
@@ -17,11 +18,13 @@ class TrieNode {
 	char character;
 	Map<TrieNode, Integer> activeNodes = null;// = new HashMap<TrieNode,
 												// Integer>();
+	// * histogram */
+	Hist hist = new Hist();
+
 	public Interval length_interval = new Interval();
 	public int subtries = 1;
 
 	public TrieNode(TrieNode p, char x) {
-		// super(p, x);
 		initalize(p, x);
 		activeNodes = new HashMap<TrieNode, Integer>();
 	}
@@ -116,7 +119,7 @@ class TrieNode {
 		// deletion
 		// add all p active node to this, with distance +1 if possible
 		for (TrieNode n : parentActiveNodes.keySet()) {
-			if (n == parent && depth >0)
+			if (n == parent && depth > 0)
 				activeNodes.put(n, 1);
 			else {
 				int l = parentActiveNodes.get(n) + 1;
@@ -173,9 +176,10 @@ class TrieNode {
 	@Override
 	public String toString() {
 		String s = "";
-		for (TrieNode n : activeNodes.keySet())
-			s = s + n.id + " " + n.character + ",";
-		return id + ":" + Text() + ":" + length_interval.toString() + ":" + s;
+		// for (TrieNode n : activeNodes.keySet())
+		// s = s + n.id + " " + n.character + ",";
+		return id + ":" + Text() + ":" + length_interval.toString() + ":" + s
+				+ "\n" + hist + "\n";
 
 	};
 
@@ -190,25 +194,33 @@ class TrieNode {
 		ArrayList<TrieNode> todel = new ArrayList<TrieNode>();
 		// length pruning
 		for (TrieNode n : activeNodes.keySet()) {
-			if (!length_interval.intersect(n.length_interval, d)) {
+			int e = activeNodes.get(n);
+			if (!length_interval.intersect(n.length_interval, d - e)) {
 				todel.add(n);
 			}
-
 		}
 		// single branch pruning
 		if (this.parent.children.size() == 1) {
-			if(activeNodes.containsKey(parent))
-			if(!leaf&&!parent.leaf ) 
-			
-			todel.add(parent);
+			if (activeNodes.containsKey(parent))
+				if (!leaf && !parent.leaf)
+					todel.add(parent);
 		}
-		//remove parent of parents, up to depth
+		// remove parent of parents, up to depth
 		// count pruning
-	if(subtries==1){
-			for(TrieNode n: children.values()){ //it should be only one
+		if (subtries == 1) {
+			for (TrieNode n : children.values()) { // it should be only one
 				todel.add(n);
 			}
 		}
+		// hash pruning A*
+		for (TrieNode n : activeNodes.keySet()) {
+			int e = activeNodes.get(n);
+			int diff = hist.Diff(n.hist);
+			if (diff > 2 * (d + e)) {
+				todel.add(n);
+			}
+		}
+
 		for (TrieNode n : todel) {
 			activeNodes.remove(n);
 		}

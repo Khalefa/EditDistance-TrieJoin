@@ -35,8 +35,15 @@ public class TestInterval {
 		Assert.assertTrue(i.intersect(x, 2));
 		Assert.assertTrue(x.intersect(i, 2));
 		
+		Assert.assertEquals(i.distance(x),1);
+		Assert.assertEquals(x.distance(i),1);
 		i.add(3);
 		Assert.assertTrue(i.intersect(x));
-	}
+		
+		Assert.assertEquals(i.distance(j),0);
+		Assert.assertEquals(j.distance(i),0);
+		
+		
+		}
 
 }

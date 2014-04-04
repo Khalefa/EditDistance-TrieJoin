@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 public class TriePathStack extends Trie {
 
 	public TriePathStack(String name, int wcount, int depth) {
-		// TODO Auto-generated constructor stub
 		int words = 0;
 		root = (TrieNode) new TrieNode(null, '\0');
 		try {
@@ -28,11 +27,8 @@ public class TriePathStack extends Trie {
 			}
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//System.out.println("Words" + words);
-		// BuildActiveNode(depth);
 		DFS(depth);
 	}
 

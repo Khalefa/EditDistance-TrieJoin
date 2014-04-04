@@ -25,6 +25,7 @@ public class Test {
 		else
 			r = new Trie(name, limit);
 
+		// r.Print();
 		HashSet<String> m = r.Matches();
 		System.out.print(Global.str());
 		System.out.print("\t" + r.getActiveNode());
@@ -38,7 +39,7 @@ public class Test {
 		String n = "c:\\data\\word.format";
 		// n = "test.txt";
 
-		int d = 1;
+		int d = 2;
 		int limit = -2;
 
 		TrieNode.counter = 0;
@@ -47,15 +48,14 @@ public class Test {
 	}
 
 	static void test() {
-		Global.prune = false;
-		Global.delete_not_needed_activenodes = false;
-		runtest();
-		Global.prune = true;
-		Global.delete_not_needed_activenodes = false;
-		runtest();
-		Global.prune = false;
-		Global.delete_not_needed_activenodes = true;
-		runtest();
+		// Global.prune = false;
+		// Global.delete_not_needed_activenodes = false;
+		// runtest();
+		/*
+		 * Global.prune = true; Global.delete_not_needed_activenodes = false;
+		 * runtest(); Global.prune = false; Global.delete_not_needed_activenodes
+		 * = true; runtest();
+		 */
 		Global.prune = true;
 		Global.delete_not_needed_activenodes = true;
 		runtest();
@@ -67,9 +67,12 @@ public class Test {
 
 		// active nodes212798Matched52821
 		// time2907
-		test();
+		// test();
+
 		Global.alg = "ps";
 		test();
+		// Global.alg = "tt";
+		// test();
 	}
 
 }

@@ -7,31 +7,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import edu.alexu.util.Hist;
+
 public class Trie {
 	TrieNode root;
 
-	// auxilaries access to nodes directly for debugging only
-	HashMap<Integer, TrieNode> nodes = new HashMap<Integer, TrieNode>();
+	// auxiliaries access to nodes directly for debugging only
+	// HashMap<Integer, TrieNode> nodes = new HashMap<Integer, TrieNode>();
 
 	public Trie() {
 		root = new TrieNode(null, '\0');
 	}
 
 	public void insertString(String s) {
+		int[] curr_hist = new int[27];
+		Hist.build_hist(s, curr_hist);
 
 		TrieNode v = root;
 		v.length_interval.add(s.length());
-		nodes.put(v.id, v);
+		root.hist.insert(curr_hist);
+		// nodes.put(v.id, v);
 		int d = 1;
 		for (char ch : s.toCharArray()) {
-			//v.subtries++;
+			int x = Hist.id(ch);
+			curr_hist[x]--;
+
 			TrieNode next = v.children.get(ch);
 			if (next == null) {
 				v.children.put(ch, next = new TrieNode(v, ch));
 			} else
 				next.subtries++;
 			next.length_interval.add(s.length() - d);
-			nodes.put(next.id, next);
+			next.hist.insert(curr_hist);
+			// nodes.put(next.id, next);
 			d++;
 			v = next;
 		}
@@ -52,14 +60,14 @@ public class Trie {
 					break;
 				insertString(line);
 				words++;
-				if(wcount==0)break;
+				if (wcount == 0)
+					break;
 				wcount--;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public void Stats() {
@@ -82,7 +90,6 @@ public class Trie {
 	}
 
 	public ArrayList<TrieNode> GetLeafs() {
-
 		ArrayList<TrieNode> queue = new ArrayList<TrieNode>();
 		ArrayList<TrieNode> leafs = new ArrayList<TrieNode>();
 
@@ -133,14 +140,13 @@ public class Trie {
 	public void Print() {
 		for (TrieNode n : GetNodes())
 			System.out.println(n);
-
 	}
 
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 
 		String name = "test.txt";// c:\\data\\querylog.format";// word.format";//tiny.txt";//word.format";
-		Trie r = new Trie(name,0);
+		Trie r = new Trie(name, 0);
 		// r.Stats();
 		// for(TrieNode t: r.GetLeafs()){
 		// if (t.Text()=="sarah")

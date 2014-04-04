@@ -13,6 +13,9 @@ public class Utils {
 	public static int min(int a, int b) {
 		return Math.min(a, b);
 	}
+	public static int max(int a, int b) {
+		return Math.max(a, b);
+	}
 	public static void cleanFile(String filename) {
 		HashSet<String> unquie_words = new HashSet<String>();
 		int words = 0;

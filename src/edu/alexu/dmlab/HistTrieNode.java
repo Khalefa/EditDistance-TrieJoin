@@ -24,11 +24,14 @@ public class HistTrieNode extends TrieNode {
 	int[] minHist = new int[26];
 	int[] maxHist = new int[26];
 
+	// if(d<= depth && h(maxHist,n.children.get(c).minHist,depth-d))
+	// activeNodes.put(n.children.get(c), d);
+	// +//
 	void minHist() {
 		Arrays.fill(minHist, 1 << 28);
 		for (char c : children.keySet()) {
 			((HistTrieNode) children.get(c)).minHist();
-			int[] temp =((HistTrieNode) children.get(c)).minHist;
+			int[] temp = ((HistTrieNode) children.get(c)).minHist;
 			for (int i = 0; i < temp.length; i++) {
 				if (i == (c - 'a'))
 					temp[i]++;
@@ -44,7 +47,7 @@ public class HistTrieNode extends TrieNode {
 	void maxHist() {
 		for (char c : children.keySet()) {
 			((HistTrieNode) children.get(c)).maxHist();
-			int[] temp =((HistTrieNode) children.get(c)).maxHist;
+			int[] temp = ((HistTrieNode) children.get(c)).maxHist;
 			for (int i = 0; i < temp.length; i++) {
 				if (i == (c - 'a'))
 					temp[i]++;
