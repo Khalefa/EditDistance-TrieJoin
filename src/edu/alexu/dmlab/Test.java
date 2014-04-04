@@ -39,7 +39,7 @@ public class Test {
 		String n = "c:\\data\\word.format";
 		// n = "test.txt";
 
-		int d = 2;
+		int d = 1;
 		int limit = -2;
 
 		TrieNode.counter = 0;
@@ -70,7 +70,9 @@ public class Test {
 		// test();
 
 		Global.alg = "ps";
+		Global.hist_prune=false;
 		test();
+		System.out.println(TrieNode.counter);
 		// Global.alg = "tt";
 		// test();
 	}

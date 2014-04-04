@@ -21,16 +21,19 @@ public class Trie {
 
 	public void insertString(String s) {
 		int[] curr_hist = new int[27];
-		Hist.build_hist(s, curr_hist);
+		if (Global.hist_prune)
+			Hist.build_hist(s, curr_hist);
 
 		TrieNode v = root;
 		v.length_interval.add(s.length());
-		root.hist.insert(curr_hist);
+		if (Global.hist_prune)
+			root.hist.insert(curr_hist);
 		// nodes.put(v.id, v);
 		int d = 1;
 		for (char ch : s.toCharArray()) {
 			int x = Hist.id(ch);
-			curr_hist[x]--;
+			if (Global.hist_prune)
+				curr_hist[x]--;
 
 			TrieNode next = v.children.get(ch);
 			if (next == null) {
@@ -38,7 +41,8 @@ public class Trie {
 			} else
 				next.subtries++;
 			next.length_interval.add(s.length() - d);
-			next.hist.insert(curr_hist);
+			if (Global.hist_prune)
+				next.hist.insert(curr_hist);
 			// nodes.put(next.id, next);
 			d++;
 			v = next;
