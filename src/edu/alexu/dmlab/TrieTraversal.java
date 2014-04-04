@@ -93,9 +93,9 @@ public class TrieTraversal extends Trie {
 
 		String name = "test.txt";// word.format";//tiny.txt";//word.format";
 		Global.prune = false; // 74
-		TrieTraversal r = new TrieTraversal(name, 0,0);
+		TrieTraversal r = new TrieTraversal(name, 0, 0);
 
-		r.Print();
+		//r.Print();
 		// r.Matches();
 		// r.Stats();
 

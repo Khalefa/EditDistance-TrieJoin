@@ -29,7 +29,10 @@ public class TriePathStack extends Trie {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		long s=System.currentTimeMillis();
 		DFS(depth);
+		Global.time=System.currentTimeMillis()-s;
+		
 	}
 
 	// * u should not ever use this function */

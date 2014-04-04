@@ -27,26 +27,17 @@ public class Test {
 
 		// r.Print();
 		HashSet<String> m = r.Matches();
+		Global.activenodes=r.getActiveNode();
+		Global.r=m.size();
+	
 		System.out.print(Global.str());
-		System.out.print("\t" + r.getActiveNode());
-		System.out.print("\t " + m.size());
-
+		
 		long endTime = System.currentTimeMillis();
-		System.out.println("\t" + (endTime - startTime));
+		System.out.println();
+		//System.out.println("\t" + (endTime - startTime));
 	}
 
-	static void runtest() {
-		String n = "c:\\data\\word.format";
-		// n = "test.txt";
-
-		int d = 1;
-		int limit = -2;
-
-		TrieNode.counter = 0;
-		test(n, limit, d);
-
-	}
-
+	
 	static void test() {
 		// Global.prune = false;
 		// Global.delete_not_needed_activenodes = false;
@@ -56,9 +47,13 @@ public class Test {
 		 * runtest(); Global.prune = false; Global.delete_not_needed_activenodes
 		 * = true; runtest();
 		 */
-		Global.prune = true;
+		Global.file="c:\\data\\word.format";
+		Global.limit=-2;
+		Global.t=1;
 		Global.delete_not_needed_activenodes = true;
-		runtest();
+		TrieNode.counter = 0;
+		
+		test(Global.file, Global.limit, Global.t);
 	}
 
 	public static void main(String[] args) {
@@ -70,9 +65,10 @@ public class Test {
 		// test();
 
 		Global.alg = "ps";
+		System.out.println(Global.header());
 		Global.hist_prune=false;
 		test();
-		System.out.println(TrieNode.counter);
+		//System.out.println(TrieNode.counter);
 		// Global.alg = "tt";
 		// test();
 	}

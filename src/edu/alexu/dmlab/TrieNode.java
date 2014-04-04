@@ -213,14 +213,14 @@ class TrieNode {
 			}
 		}
 		// hash pruning A*
-		if(Global.hist_prune)
-		for (TrieNode n : activeNodes.keySet()) {
-			int e = activeNodes.get(n);
-			int diff = hist.Diff(n.hist);
-			if (diff > 2 * (d - e)) {
-				todel.add(n);
+		if (Global.hist_prune)
+			for (TrieNode n : activeNodes.keySet()) {
+				int e = activeNodes.get(n);
+				int diff = hist.Diff(n.hist);
+				if (diff > 2 * (d - e)) {
+					todel.add(n);
+				}
 			}
-		}
 
 		for (TrieNode n : todel) {
 			activeNodes.remove(n);
